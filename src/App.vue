@@ -5,17 +5,23 @@
       <div class="row justify-content-md-center">
         <TodoList v-bind:todos="todos"/>
       </div>
+      <div class="row justify-content-md-center">
+        <CreateTodo v-on:create-todo="createTodo"/>  
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import sweetalert from 'sweetalert';
 import TodoList from "./components/TodoList";
+import CreateTodo from "./components/CreateTodo";
 
 export default {
   name: "app",
   components: {
-    TodoList
+    TodoList,
+    CreateTodo
   },
   data() {
     return {
@@ -46,6 +52,12 @@ export default {
         }
       ]
     };
+  },
+  methods: {
+    createTodo(newTodo) {
+      this.todos.push(newTodo);
+       sweetalert('成功!', 'To-Do 添加', 'success');
+    }
   }
 };
 </script>
