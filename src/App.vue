@@ -6,14 +6,13 @@
         <TodoList v-bind:todos="todos"/>
       </div>
       <div class="row justify-content-md-center">
-        <CreateTodo v-on:create-todo="createTodo"/>  
+        <CreateTodo/>  
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import sweetalert from 'sweetalert';
 import TodoList from "./components/TodoList";
 import CreateTodo from "./components/CreateTodo";
 
@@ -25,38 +24,13 @@ export default {
   },
   data() {
     return {
-      todos: [
-        {
-          id: 1,
-          title: "Todo A",
-          project: "Project A",
-          done: false
-        },
-        {
-          id: 2,
-          title: "Todo B",
-          project: "Project B",
-          done: true
-        },
-        {
-          id: 3,
-          title: "Todo C",
-          project: "Project C",
-          done: false
-        },
-        {
-          id: 4,
-          title: "Todo C",
-          project: "Project C",
-          done: false
-        }
-      ]
+      todos: this.$store.getters.todos
     };
   },
   methods: {
     createTodo(newTodo) {
       this.todos.push(newTodo);
-       sweetalert('成功!', 'To-Do 添加', 'success');
+      sweetalert('成功!', 'To-Do 添加', 'success');
     }
   }
 };

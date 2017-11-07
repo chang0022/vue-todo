@@ -19,13 +19,13 @@
                 <form>
                     <div class="form-group">
                         <label>Title</label>
-                        <input type="text" class="form-control" v-model="todo.title">
+                        <input type="text" class="form-control" v-model="newTitle">
                     </div>
                     <div class="form-group">
                         <label>Project</label>
-                        <input type="text" class="form-control" v-model="todo.project">
+                        <input type="text" class="form-control" v-model="newProject">
                     </div>
-                    <button type="button" class="btn btn-outline-secondary" @click="hideForm">确定</button>
+                    <button type="button" class="btn btn-outline-secondary" @click="hideForm(), editTodo(todo)">确定</button>
                 </form>
             </div>
         </div>
@@ -34,11 +34,15 @@
     </div>
 </template>
 <script>
+import sweetalert from "sweetalert";
+
 export default {
   props: ["todo"],
   data() {
     return {
-      isEditing: false
+      isEditing: false,
+      newTitle: this.todo.title,
+      newProject: this.todo.project
     };
   },
   methods: {
@@ -48,11 +52,45 @@ export default {
     hideForm() {
       this.isEditing = false;
     },
+    editTodo(todo) {
+      const newTodo = {};
+      newTodo.title = this.newTitle;
+      newTodo.project = this.newProject;
+      this.$store.dispatch("editTodo", { todo, newTodo });
+    },
     deleteTodo(todo) {
-      this.$emit("delete-todo", todo);
+      sweetalert({
+        title: "确定删除?",
+        text: "该 To-DO 将被删除",
+        icon: "warning",
+        buttons: {
+          cancel: {
+            text: "取消",
+            value: null,
+            visible: true,
+            closeModal: true
+          },
+          confirm: {
+            text: "确定",
+            value: true,
+            visible: true,
+            closeModal: true
+          }
+        }
+      }).then(value => {
+        if (value) {
+          this.$store.dispatch("deleteTodo", todo);
+          sweetalert(
+            "删除!",
+            `Your To-Do ${todo.title} has been deleted.`,
+            "success"
+          );
+        }
+      });
     },
     completeTodo(todo) {
-      this.$emit("complete-todo", todo);
+      this.$store.dispatch("completeTodo", todo);
+      sweetalert("成功!", "To-Do 完成!", "success");
     }
   }
 };

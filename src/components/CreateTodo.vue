@@ -22,6 +22,8 @@
     </div>
 </template>
 <script>
+import sweetalert from 'sweetalert';
+
 export default {
   data() {
     return {
@@ -35,13 +37,13 @@ export default {
       this.isCreating = true;
     },
     closeForm() {
-      this.isCreating = true;
+      this.isCreating = false;
     },
     createTodo() {
       if (this.title.length > 0 && this.project.length > 0) {
         const title = this.title;
         const project = this.project;
-        this.$emit("create-todo", {
+        this.$store.dispatch('addTodo', {
           title,
           project,
           done: false
@@ -49,6 +51,7 @@ export default {
         this.title = "";
         this.project = "";
         this.isCreating = false;
+        sweetalert('成功!', 'To-Do 添加', 'success');
       }
     }
   }
